@@ -10,10 +10,10 @@ class tb_env extends uvm_env;
     `uvm_component_utils(tb_env)
 
     //child components
-    tb_agt agt_reg;
-    tb_agt agt_input;
-    tb_agt agt_output;
-    tb_scb scb;
+    tb_agt_reg agt_reg;     //register setting
+    tb_agt_data agt_input;  //input data
+    tb_agt_data agt_output; //output data
+    tb_scb scb;             //scoreboard
 
     //constructor
     function new(string name, uvm_component parent);
@@ -27,13 +27,12 @@ class tb_env extends uvm_env;
       uvm_config_db#(int)::set(this, "agt_reg", "is_active", UVM_ACTIVE);
       uvm_config_db#(int)::set(this, "agt_input", "is_active", UVM_ACTIVE);
       uvm_config_db#(int)::set(this, "agt_output", "is_active", UVM_ACTIVE);
-      uvm_config_db#(agent_type_enum)::set(this, "agt_reg", "agent_type", REGISTER_SETTING);
       uvm_config_db#(agent_type_enum)::set(this, "agt_input", "agent_type", DATA_TRANS);
       uvm_config_db#(agent_type_enum)::set(this, "agt_output", "agent_type", DATA_TRANS);
       //create child components
-      agt_reg = tb_agt::type_id::create("agt_reg", this);
-      agt_input = tb_agt::type_id::create("agt_input", this);
-      agt_output = tb_agt::type_id::create("agt_output", this);
+      agt_reg = tb_agt_reg::type_id::create("agt_reg", this);
+      agt_input = tb_agt_data::type_id::create("agt_input", this);
+      agt_output = tb_agt_data::type_id::create("agt_output", this);
       scb = tb_scb::type_id::create("scb", this);
       //messaging
       `uvm_info(get_full_name(), "Build stage complete.", UVM_LOW);

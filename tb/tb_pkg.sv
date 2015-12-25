@@ -14,20 +14,36 @@ package tb_pkg;
     //import uvm package
     import uvm_pkg::*;
 
-    //type define agent_type_enum
-    //choose from register setting and data transferring
-    typedef enum {REGISTER_SETTING, DATA_TRANS} agent_type_enum;
-    typedef enum {MASTER, SLAVE} if_type_enum;
+    //type define master_or_slave_enum
+    //choose from data master and data slave
+    typedef enum {D_MASTER, D_SLAVE} master_or_slave_enum;
+
+    //type define register transaction type
+    typedef enum {REG_WRITE, REG_READ} reg_write_or_read_enum;
     //test sequence
     `include "tb_seq.sv"
 
-    //testbench heirarchy
+    //transactions
+    `include "tb_reg_tranx.sv"
+    `include "tb_data_tranx.sv"
+    //testbench components
+    //uvm_sequencer
     `include "tb_sqr_data.sv"
     `include "tb_sqr_reg.sv"
+    //uvm_driver
     `include "tb_drv_data.sv"
+    `include "tb_drv_data_m.sv"
+    `include "tb_drv_data_s.sv"
     `include "tb_drv_reg.sv"
+    //uvm_monitor
     `include "tb_mon_data.sv"
+    `include "tb_mon_data_m.sv"
+    `include "tb_mon_data_s.sv"
     `include "tb_mon_reg.sv"
+    //uvm_agent
+    `include "tb_agt_data.sv"
+    `include "tb_agt_reg.sv"
+    //uvm_environment
     `include "tb_env.sv"
 
     //test

@@ -15,8 +15,6 @@ class tb_drv_reg extends uvm_driver #(reg_tranx);   //parameterised to get regis
   //interface
   virtual reg_if vif;
 
-  //mailbox
-
   //constructor
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -55,7 +53,7 @@ class tb_drv_reg extends uvm_driver #(reg_tranx);   //parameterised to get regis
       //do if rst_n is released
       if(rst_n) begin
         seq_item_port.get_next_item(tx);    //get transaction from sequencer
-        if(tx.trans_type == WRITE)          //if tx is a write transaction
+        if(tx.tranx_type == REG_WRITE)      //if tx is a write transaction
           write_reg(tx);                    //drive transaction on pin level
         else                                //if tx is a read transaction
           read_reg(tx);                       //drive transaction on pin level
@@ -68,8 +66,8 @@ class tb_drv_reg extends uvm_driver #(reg_tranx);   //parameterised to get regis
     @(posedge vif.s_clk) begin
       vif.reg_cs <= 1'b 1;
       vif.reg_we <= 1'b 1;
-      vif.reg_addr <= tx.reg_addr;
-      vif.reg_data_wr <= tx.reg_data_wr;
+      vif.reg_addr <= tx.address;
+      vif.reg_data_wr <= tx.data;
       `uvm_info(get_type_name(), $sformatf("@ %0t, WRITE REGISTER: %0h @ %0h", $time, vif.reg_data_wr, vif.reg_addr), UVM_LOW)
     end
   endtask
@@ -78,15 +76,13 @@ class tb_drv_reg extends uvm_driver #(reg_tranx);   //parameterised to get regis
     @(posedge vif.s_clk) begin
       vif.reg_cs <= 1'b 1;
       vif.reg_we <= 1'b 0;
-      vif.reg_addr <= tx.reg_addr;
+      vif.reg_addr <= tx.address;
       vif.reg_data_wr <= 32'b 0;
     end
-    @(posedge vif.s_clk) begin
-      if(vif.reg_rdack) begin
-        tx.reg_data_rd <= vif.reg_data_rd;
-        seq_item_port.put(tx);
-      end
-    end
+    while(vif.reg_rdack)
+      @(posedge vif.s_clk);
+    tx.data <= vif.reg_data_rd;
+    seq_item_port.put(tx);
   endtask
 
 endclass
