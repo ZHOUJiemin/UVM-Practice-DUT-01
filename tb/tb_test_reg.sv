@@ -31,9 +31,9 @@ class base_test extends uvm_test;
 
     virtual task run_phase(uvm_phase phase);
       phase.phase_done.set_drain_time(this, 1500);
-      tb_seq seq_set_reg;
+      tb_seq_reg seq_set_reg;
       phase.raise_objection(this);
-      seq_set_reg = tb_seq::type_id::create("seq_set_reg");
+      seq_set_reg = tb_seq_reg::type_id::create("seq_set_reg");
       seq_set_reg.start(env.agt_reg.sqr);
       phase.drop_objection(this);
     endtask
@@ -43,5 +43,5 @@ class base_test extends uvm_test;
       //sprint is just like print, except it returns the string rather than displays it
       `uvm_info(get_type_name(), $sformatf("Printing the test topology :\n%s", this.sprint(printer)),UVM_LOW)
     endfunction
-    
+
 endclass

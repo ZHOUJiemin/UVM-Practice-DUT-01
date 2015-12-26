@@ -21,7 +21,8 @@ package tb_pkg;
     //type define register transaction type
     typedef enum {REG_WRITE, REG_READ} reg_write_or_read_enum;
     //test sequence
-    `include "tb_seq.sv"
+    `include "tb_seq_reg.sv"
+    `include "tb_seq_data.sv"
 
     //transactions
     `include "tb_reg_tranx.sv"
@@ -47,7 +48,7 @@ package tb_pkg;
     `include "tb_env.sv"
 
     //test
-    `include "base_test.sv"
+    `include "tb_test_reg.sv"
 
 endpackage
 
